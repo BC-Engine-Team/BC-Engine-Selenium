@@ -1,12 +1,11 @@
-const {By,Key,Builder, until} = require("selenium-webdriver");
+const {By, Key, Builder, until} = require("selenium-webdriver");
 require("chromedriver");
-
-let driver = "";
+const should = require('chai').should();
 
 async function loginAsAdmin() {
+    let driver = new Builder().forBrowser("chrome").build();
 
     try {
-        driver = new Builder().forBrowser("chrome").setChromeOptions("disable-web-security").build();
         let username = "first@benoit-cote.com";
         let password = "verySecurePassword";
 
@@ -20,6 +19,7 @@ async function loginAsAdmin() {
         let navElements = await driver.wait(until.elementsLocated(By.className("px-2 nav-link")), 10000);
 
         console.assert(navElements.length === 4);
+        console.log('Logged in as admin.')
 
         await driver.quit();
     }
@@ -28,57 +28,55 @@ async function loginAsAdmin() {
     }
 }
 
-loginAsAdmin();
-
-async function loginAsEmployee() {
+function loginAsEmployee() {
+    let driver = new Builder().forBrowser("chrome").build();
 
     try {
-        driver = new Builder().forBrowser("chrome").setChromeOptions("disable-web-security").build();
+        driver.get("http://localhost:3000");
 
         let username = "second@benoit-cote.com";
         let password = "verySecurePassword";
 
-        await driver.get("http://localhost:3000");
+        driver.findElement(By.id("floatingEmail")).sendKeys(username,Key.RETURN);
+        driver.findElement(By.id("floatingPassword")).sendKeys(password,Key.RETURN);
 
-        await driver.findElement(By.id("floatingEmail")).sendKeys(username,Key.RETURN);
-        await driver.findElement(By.id("floatingPassword")).sendKeys(password,Key.RETURN);
+        driver.findElement(By.className("btn")).click();
 
-        await driver.findElement(By.className("btn")).click();
-
-        let navElements = await driver.wait(until.elementsLocated(By.className("px-2 nav-link")), 10000);
+        let navElements = driver.wait(until.elementsLocated(By.className("px-2 nav-link")), 10000);
 
         console.assert(navElements.length === 2);
+        console.log('Logged in as employee.')
 
-        await driver.quit();
+        driver.quit();
     }
     catch(err) {
         handleFailure(err, driver);
     }
 }
 
-loginAsEmployee();
+function logout() {
+    let driver = new Builder().forBrowser("chrome").build();
 
-async function logout() {
     try {
-        driver = new Builder().forBrowser("chrome").setChromeOptions("disable-web-security").build();
+        driver.get("http://localhost:3000");
 
-        let username = "second@benoit-cote.com";
+        let username = "first@benoit-cote.com";
         let password = "verySecurePassword";
 
-        await driver.get("http://localhost:3000");
+        driver.findElement(By.id("floatingEmail")).sendKeys(username,Key.RETURN);
+        driver.findElement(By.id("floatingPassword")).sendKeys(password,Key.RETURN);
 
-        await driver.findElement(By.id("floatingEmail")).sendKeys(username,Key.RETURN);
-        await driver.findElement(By.id("floatingPassword")).sendKeys(password,Key.RETURN);
+        driver.findElement(By.className("btn")).click();
+        console.log('Logged in.')
 
-        await driver.findElement(By.className("btn")).click();
+        driver.wait(until.elementLocated(By.id("sign_out")), 10000).click();
 
-        await driver.wait(until.elementsLocated(By.className("px-2 nav-link")), 10000);
-  
-        await driver.findElement(By.xpath("//*[@id='basic-navbar-nav']/div[2]/a")).click();
+        let title = driver.wait(until.elementLocated(By.className("display-1")), 10000).getText();
 
-        let loginTitle = await driver.wait(until.elementLocated(By.className("display-1")), 10000);
+        console.assert(title === "Login");
+        console.log('Logged in.')
 
-        console.assert(loginTitle.getText === "Login");
+        driver.quit();
     }
     catch(err) {
         handleFailure(err, driver);
@@ -89,3 +87,9 @@ function handleFailure(err, driver) {
     console.error('Something went wrong!\n', err.stack, '\n');
     driver.quit();
 }
+
+loginAsAdmin();
+
+// loginAsEmployee();
+
+// logout();
