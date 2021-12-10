@@ -3,123 +3,129 @@ require("chromedriver");
 const assert = require("assert");
 const { describe, beforeEach, afterEach, it } = require("mocha");
 
-// Tests the different roles available
-describe("User wants to login", () => {
-    let driver;
-    let url = "http://localhost:3000";
 
-    beforeEach(() => {
-        driver = new Builder().forBrowser("chrome").build();
-        driver.get(url);
-    });
+describe("S1 - Login, Logout and Roles", () => {
 
-    it("Successfully loged in as admin", async () => {
+    // Tests the different roles available
+    describe("S1.1 - User wants to login", () => {
+        let driver;
+        let url = "http://localhost:3000";
 
-        await login(driver);
-    });
-
-    it("Successfully loged in as employee", async () => {
-
-        await login(driver, "employee");
-    });
-
-    afterEach(async () => {
-        await driver.quit()
-    });
-})
-
-// Tests the logout function
-describe("User wants to logout", () => {
-    let driver;
-    let url = "http://localhost:3000";
-
-    beforeEach(() => {
-        driver = new Builder().forBrowser("chrome").build();
-        driver.get(url);
-    });
-
-    it("Successfully loged out", async () => {
-
-        await login(driver);
-    
-        await logout(driver);
-    });
-
-    afterEach(async () => {
-        await driver.quit()
-    });
-})
-
-// Tests the login validation
-describe("Verify login validation", () => {
-    let driver;
-    let url = "http://localhost:3000";
-
-    beforeEach(() => {
-        driver = new Builder().forBrowser("chrome").build();
-        driver.get(url);
-    });
-
-    it("Should show alert when email is empty", async () => {
-        let password = "verySecurePassword";
-
-        await driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
-    
-        await driver.findElement(By.className("btn")).click();
-
-        let alert = await driver.findElements(By.className("invalid-feedback"));
-
-        assert(alert[0].isDisplayed());
-    });
-
-    it("Should show alert when password is empty", async () => {
-        let username = "first@benoit-cote.com";
-
-        await driver.findElement(By.id("floatingEmail")).sendKeys(username, Key.RETURN);
-    
-        await driver.findElement(By.className("btn")).click();
-
-        let alert = await driver.findElements(By.className("invalid-feedback"));
-
-        assert(alert[1].isDisplayed());
-    });
-
-    it("Should show both alerts when password and email are empty", async () => {
-    
-        let alertCounter = 0;
-
-        await driver.findElement(By.className("btn")).click();
-
-        let alert = await driver.findElements(By.className("invalid-feedback"));
-
-        alert.forEach(element => {
-            if(element.isDisplayed()) {
-                alertCounter += 1;
-            }
+        beforeEach(() => {
+            driver = new Builder().forBrowser("chrome").build();
+            driver.get(url);
         });
 
-        assert.equal(alertCounter, 2);
-    });
+        it("S1.1.1 - Successfully loged in as admin", async () => {
 
-    it("Should show alert saying 'incorrect email or password'", async () => {
-        let username = "a@a.com";
-        let password = "testIncorrect"; 
+            await login(driver);
+        });
 
-        await driver.findElement(By.id("floatingEmail")).sendKeys(username, Key.RETURN);
-        await driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
+        it("S1.1.2 - Successfully loged in as employee", async () => {
+
+            await login(driver, "employee");
+        });
+
+        afterEach(async () => {
+            await driver.quit()
+        });
+    })
+
+    // Tests the logout function
+    describe("S1.2 - User wants to logout", () => {
+        let driver;
+        let url = "http://localhost:3000";
+
+        beforeEach(() => {
+            driver = new Builder().forBrowser("chrome").build();
+            driver.get(url);
+        });
+
+        it("S1.2.1 - Successfully loged out", async () => {
+
+            await login(driver);
         
-        await driver.findElement(By.className("btn")).click();
+            await logout(driver);
+        });
 
-        let alert = await driver.findElement(By.css("div[role=alert]")).getText();
+        afterEach(async () => {
+            await driver.quit()
+        });
+    })
 
-        assert.equal(alert, "Incorrect email or password.");
-    });
+    // Tests the login validation
+    describe("S1.3 - Verify login validation", () => {
+        let driver;
+        let url = "http://localhost:3000";
 
-    afterEach(async () => {
-        await driver.quit();
-    });
-})
+        beforeEach(() => {
+            driver = new Builder().forBrowser("chrome").build();
+            driver.get(url);
+        });
 
+        it("S1.3.1 - Should show alert when email is empty", async () => {
+            let password = "verySecurePassword";
+
+            await driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
+        
+            await driver.findElement(By.className("btn")).click();
+
+            let alert = await driver.findElements(By.className("invalid-feedback"));
+
+            assert(alert[0].isDisplayed());
+        });
+
+        it("S1.3.2 - Should show alert when password is empty", async () => {
+            let username = "first@benoit-cote.com";
+
+            await driver.findElement(By.id("floatingEmail")).sendKeys(username, Key.RETURN);
+        
+            await driver.findElement(By.className("btn")).click();
+
+            let alert = await driver.findElements(By.className("invalid-feedback"));
+
+            assert(alert[1].isDisplayed());
+        });
+
+        it("S1.3.3 - Should show both alerts when password and email are empty", async () => {
+        
+            let alertCounter = 0;
+
+            await driver.findElement(By.className("btn")).click();
+
+            let alert = await driver.findElements(By.className("invalid-feedback"));
+
+            alert.forEach(element => {
+                if(element.isDisplayed()) {
+                    alertCounter += 1;
+                }
+            });
+
+            assert.equal(alertCounter, 2);
+        });
+
+        it("S1.3.4 - Should show alert saying 'incorrect email or password'", async () => {
+            let username = "a@a.com";
+            let password = "testIncorrect"; 
+
+            await driver.findElement(By.id("floatingEmail")).sendKeys(username, Key.RETURN);
+            await driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
+            
+            await driver.findElement(By.className("btn")).click();
+
+            let alert = await driver.findElement(By.css("div[role=alert]")).getText();
+
+            assert.equal(alert, "Incorrect email or password.");
+        });
+
+        afterEach(async () => {
+            await driver.quit();
+        });
+    })
+});
+
+
+// Components
 login = async (driver, role = "admin") => {
 
     let username,
@@ -145,7 +151,7 @@ login = async (driver, role = "admin") => {
         assert.equal(navElements.length, 4)
         console.log('Logged in as admin.');
     }
-    else if (role = "employee") {
+    else if (role === "employee") {
         assert.equal(navElements.length, 2)
         console.log('Logged in as employee.');
     }
