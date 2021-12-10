@@ -98,36 +98,36 @@ describe("Login as specific user", function() {
     });
 })
 
-// async function login(driver, role = "admin") {
+async function login(driver, role = "admin") {
 
-//     let username,
-//         password;
+    let username,
+        password;
 
-//     if (role === "admin") {
-//         username = "first@benoit-cote.com";
-//         password = "verySecurePassword";
-//     }
-//     else if (role = "employee") { 
-//         username = "second@benoit-cote.com";
-//         password = "verySecurePassword";
-//     }
+    if (role === "admin") {
+        username = "first@benoit-cote.com";
+        password = "verySecurePassword";
+    }
+    else if (role = "employee") { 
+        username = "second@benoit-cote.com";
+        password = "verySecurePassword";
+    }
 
-//     await driver.findElement(By.id("floatingEmail")).sendKeys(username, Key.RETURN);
-//     await driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
+    await driver.findElement(By.id("floatingEmail")).sendKeys(username, Key.RETURN);
+    await driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
 
-//     await driver.findElement(By.className("btn")).click();
+    await driver.findElement(By.className("btn")).click();
 
-//     let navElements = await driver.wait(until.elementsLocated(By.className("px-2 nav-link")), 10000);
+    let navElements = await driver.wait(until.elementsLocated(By.className("px-2 nav-link")), 10000);
 
-//     if (role === "admin") {
-//         assert.equal(navElements.length, 5)
-//         console.log('Logged in as admin.');
-//     }
-//     else if (role = "employee") {
-//         assert.equal(navElements.length, 2)
-//         console.log('Logged in as employee.');
-//     }
-// }
+    if (role === "admin") {
+        assert.equal(navElements.length, 5)
+        console.log('Logged in as admin.');
+    }
+    else if (role = "employee") {
+        assert.equal(navElements.length, 2)
+        console.log('Logged in as employee.');
+    }
+}
 
 async function logout(driver) {
 
