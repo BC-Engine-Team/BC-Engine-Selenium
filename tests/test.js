@@ -2,40 +2,125 @@ const { By, Key, Builder, until } = require("selenium-webdriver");
 require("chromedriver");
 const assert = require("assert");
 const { describe, beforeEach, afterEach, it } = require("mocha");
-const { elementIsVisible, elementLocated } = require("selenium-webdriver/lib/until");
-const should = require('chai').should();
 
-describe("Login as specific user", function() {
+// Tests the different roles available
+describe("User wants to login", () => {
     let driver;
+    let url = "http://localhost:3000";
 
-    beforeEach(function() {
+    beforeEach(() => {
         driver = new Builder().forBrowser("chrome").build();
-        driver.get("http://localhost:3000");
+        driver.get(url);
     });
 
-    it("Successfully loged in as admin", async function () {
+    it("Successfully loged in as admin", async () => {
 
         await login(driver);
     });
 
-    it("Successfully loged in as employee", async function() {
+    it("Successfully loged in as employee", async () => {
 
         await login(driver, "employee");
     });
 
-    it("Successfully loged out", async function() {
-
-        await login(driver);
-
-        await logout(driver);
-    });
-
-    afterEach(function() {
-        driver.quit()
+    afterEach(async () => {
+        await driver.quit()
     });
 })
 
-async function login(driver, role = "admin") {
+// Tests the logout function
+describe("User wants to logout", () => {
+    let driver;
+    let url = "http://localhost:3000";
+
+    beforeEach(() => {
+        driver = new Builder().forBrowser("chrome").build();
+        driver.get(url);
+    });
+
+    it("Successfully loged out", async () => {
+
+        await login(driver);
+    
+        await logout(driver);
+    });
+
+    afterEach(async () => {
+        await driver.quit()
+    });
+})
+
+// Tests the login validation
+describe("Verify login validation", () => {
+    let driver;
+    let url = "http://localhost:3000";
+
+    beforeEach(() => {
+        driver = new Builder().forBrowser("chrome").build();
+        driver.get(url);
+    });
+
+    it("Should show alert when email is empty", async () => {
+        let password = "verySecurePassword";
+
+        await driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
+    
+        await driver.findElement(By.className("btn")).click();
+
+        let alert = await driver.findElements(By.className("invalid-feedback"));
+
+        assert(alert[0].isDisplayed());
+    });
+
+    it("Should show alert when password is empty", async () => {
+        let username = "first@benoit-cote.com";
+
+        await driver.findElement(By.id("floatingEmail")).sendKeys(username, Key.RETURN);
+    
+        await driver.findElement(By.className("btn")).click();
+
+        let alert = await driver.findElements(By.className("invalid-feedback"));
+
+        assert(alert[1].isDisplayed());
+    });
+
+    it("Should show both alerts when password and email are empty", async () => {
+    
+        let alertCounter = 0;
+
+        await driver.findElement(By.className("btn")).click();
+
+        let alert = await driver.findElements(By.className("invalid-feedback"));
+
+        alert.forEach(element => {
+            if(element.isDisplayed()) {
+                alertCounter += 1;
+            }
+        });
+
+        assert.equal(alertCounter, 2);
+    });
+
+    it("Should show alert saying 'incorrect email or password'", async () => {
+        let username = "a@a.com";
+        let password = "testIncorrect"; 
+
+        await driver.findElement(By.id("floatingEmail")).sendKeys(username, Key.RETURN);
+        await driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
+        
+        await driver.findElement(By.className("btn")).click();
+
+        let alert = await driver.findElement(By.css("div[role=alert]")).getText();
+
+        assert.equal(alert, "Incorrect email or password.");
+    });
+
+    afterEach(async () => {
+        await driver.quit();
+    });
+})
+
+login = async (driver, role = "admin") => {
 
     let username,
         password;
@@ -66,14 +151,13 @@ async function login(driver, role = "admin") {
     }
 }
 
-async function logout(driver) {
+logout = async (driver) => {
 
-   await driver.wait(until.elementLocated(By.id("sign_out")), 10000).click();
+    await driver.wait(until.elementLocated(By.id("sign_out")), 10000).click();
 
     let url = await driver.wait(until.urlContains("login"));
-    console.log(url);
 
-    console.assert(url);
+    assert(url);
     console.log('Logged out.')
 
 }
