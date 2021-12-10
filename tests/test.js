@@ -1,7 +1,7 @@
 const { By, Key, Builder, until } = require("selenium-webdriver");
 require("chromedriver");
 const assert = require("assert");
-const { describe, beforeEach, afterEach } = require("mocha");
+const { describe, beforeEach, afterEach, it } = require("mocha");
 const { elementIsVisible, elementLocated } = require("selenium-webdriver/lib/until");
 const should = require('chai').should();
 
@@ -13,88 +13,25 @@ describe("Login as specific user", function() {
         driver.get("http://localhost:3000");
     });
 
-        it("Successfully loged in as admin", function () {
+    it("Successfully loged in as admin", async function () {
 
-            username = "first@benoit-cote.com";
-            password = "verySecurePassword";
+        await login(driver);
+    });
 
-            driver.wait(until.urlContains("login"));
+    it("Successfully loged in as employee", async function() {
 
-            driver.findElement(By.id("floatingEmail")).sendKeys(username, Key.RETURN);
-            driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
+        await login(driver, "employee");
+    });
 
-            driver.findElement(By.className("btn")).click();
+    it("Successfully loged out", async function() {
 
-            driver.wait(until.urlContains("dashboard"));
+        await login(driver);
 
-            let navElements = driver.findElement(By.className("px-2 nav-link"));
-
-            assert.equal(navElements.length, 4)
-            console.log('Logged in as admin.');
-
-            driver.wait(until.elementLocated(By.id("sign_out")), 10000).click();
-
-            let title = driver.findElement(By.className("display-1 font-weight-bold text-center mt-5")).getText();
-            console.log(title);
-        
-            console.assert(title === "login");
-            console.log('Logged out.')
-
-            // let role = "admin";
-    
-            // login(driver, role);
-            
-            // logout(driver);
-        });
-        // it("Successfully loged in as employee", function () {
-
-        //     username = "second@benoit-cote.com";
-        //     password = "verySecurePassword";
-
-        //     driver.findElement(By.id("floatingEmail")).sendKeys(username, Key.RETURN);
-        //     driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
-
-        //     driver.findElement(By.className("btn")).click();
-
-        //     let navElements = driver.wait(function() {
-        //         return elementsLocated(By.className("px-2 nav-link"));
-        //     }, 3000);
-        //     // let navElements = driver.wait(until.elementsLocated(By.className("px-2 nav-link")), 10000);
-
-        //     assert.equal(navElements.length, 2)
-        //     console.log('Logged in as employee.');
-
-        //     driver.wait(function() {
-        //         elementLocated(By.id("sign_out")).click();
-        //     }, 3000);
-
-        //     let title = driver.findElement(By.className("display-1 font-weight-bold text-center mt-5")).getText();
-        //     console.log(title);
-        
-        //     console.assert(title === "login");
-        //     console.log('Logged out.')
-
-            // let role = "employee";
-    
-            // login(driver, role);
-
-            // logout(driver);
-        //});
-    
-
-    // describe("login as an employee", function() {
-    //     it("Successfully loged out", function () {
-
-    //         login(driver);
-    
-    //         logout(driver);
-    //     });
-    // })
-    
+        await logout(driver);
+    });
 
     afterEach(function() {
-        driver.quit().then(function() {
-        })
+        driver.quit()
     });
 })
 
@@ -120,7 +57,7 @@ async function login(driver, role = "admin") {
     let navElements = await driver.wait(until.elementsLocated(By.className("px-2 nav-link")), 10000);
 
     if (role === "admin") {
-        assert.equal(navElements.length, 5)
+        assert.equal(navElements.length, 4)
         console.log('Logged in as admin.');
     }
     else if (role = "employee") {
@@ -133,10 +70,10 @@ async function logout(driver) {
 
    await driver.wait(until.elementLocated(By.id("sign_out")), 10000).click();
 
-    let title = await driver.findElement(By.className("display-1 font-weight-bold text-center mt-5")).getText();
-    console.log(title);
+    let url = await driver.wait(until.urlContains("login"));
+    console.log(url);
 
-    console.assert(title === "login");
+    console.assert(url);
     console.log('Logged out.')
 
 }
