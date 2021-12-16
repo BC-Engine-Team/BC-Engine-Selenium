@@ -9,6 +9,10 @@ Link to the Project:
 
 In the project directory, you can run:
 
+### `npm i`
+
+This will reinstall the dependencies for this repository in order to use the lastest features.
+
 ### `npm test`
 
 This will start all the tests available in the project.
