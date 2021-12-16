@@ -12,3 +12,11 @@ In the project directory, you can run:
 ### `npm test`
 
 This will start all the tests available in the project.
+
+### `npm run test-login`
+
+This will start teh tests for the login and logout part of the project.
+
+### `npm run test-users`
+
+This will start the tests for the users page.
