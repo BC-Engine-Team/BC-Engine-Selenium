@@ -47,12 +47,56 @@ describe("S2 - Users", () => {
 
         });
 
+        it("S2.1.3- Successfully deleted a user as an admin", async() => {
+
+            await login(driver, "admin");
+
+            await driver.findElement(By.linkText("Users")).click();
+        
+            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
+            
+            await driver.sleep(3000);
+
+            buttonDelete[0].click();
+
+            await driver.sleep(3000);
+
+            let confirmDelete = await driver.findElement(By.className("deleteUserButton"));
+
+            confirmDelete.click();
+
+            await driver.sleep(4000);
+        });
+
+
+        it("S2.1.4- Refused to delete a user as an admin", async() => {
+
+            await login(driver, "admin");
+
+            await driver.findElement(By.linkText("Users")).click();
+        
+            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
+            
+            await driver.sleep(3000);
+
+            buttonDelete[0].click();
+
+            await driver.sleep(3000);
+
+            let confirmRefuse = await driver.findElement(By.className("cancelDeleteUserButton"));
+
+            confirmRefuse.click();
+
+            await driver.sleep(4000);
+        });
+
+
         afterEach(async () => {
             await driver.quit()
         });
     });
 
-    describe("S2.2 - Admin wants to create a new user", () => {
+    describe("S2.3 - Admin wants to create a new user", () => {
         let driver;
         let url = "http://localhost:3000";
 
@@ -61,7 +105,7 @@ describe("S2 - Users", () => {
             driver.get(url);
         });
 
-        it("S2.2.1 - Successfully create a new user", async () => {
+        it("S2.3.1 - Successfully create a new user", async () => {
             await login(driver);
 
             await driver.findElement(By.linkText("Users")).click();
@@ -98,7 +142,7 @@ describe("S2 - Users", () => {
             assert.equal(users.length-1, 3);
         });
 
-        it("S2.2.2 - Shows form input validation errors", async () => {
+        it("S2.3.2 - Shows form input validation errors", async () => {
             await login(driver);
 
             await driver.findElement(By.linkText("Users")).click();
@@ -154,7 +198,7 @@ describe("S2 - Users", () => {
 
         });
 
-        it("S2.2.3 - Shows validation errors from backend", async () => {
+        it("S2.3.3 - Shows validation errors from backend", async () => {
             await login(driver);
 
             await driver.findElement(By.linkText("Users")).click();
