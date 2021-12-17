@@ -26,7 +26,6 @@ describe("S2 - Users", () => {
             let table = await driver.findElement(By.className("table"));
 
             assert(table.isDisplayed());
-
         });
 
         it("S2.1.2 - Successfully not showing all users as employee user", async () => {
@@ -44,55 +43,10 @@ describe("S2 - Users", () => {
             }
 
             assert.equal(present, false);
-
         });
-
-        it("S2.1.3- Successfully deleted a user as an admin", async() => {
-
-            await login(driver, "admin");
-
-            await driver.findElement(By.linkText("Users")).click();
-        
-            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
-            
-            await driver.sleep(3000);
-
-            buttonDelete[0].click();
-
-            await driver.sleep(3000);
-
-            let confirmDelete = await driver.findElement(By.className("deleteUserButton"));
-
-            confirmDelete.click();
-
-            await driver.sleep(4000);
-        });
-
-
-        it("S2.1.4- Refused to delete a user as an admin", async() => {
-
-            await login(driver, "admin");
-
-            await driver.findElement(By.linkText("Users")).click();
-        
-            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
-            
-            await driver.sleep(3000);
-
-            buttonDelete[0].click();
-
-            await driver.sleep(3000);
-
-            let confirmRefuse = await driver.findElement(By.className("cancelDeleteUserButton"));
-
-            confirmRefuse.click();
-
-            await driver.sleep(4000);
-        });
-
 
         afterEach(async () => {
-            await driver.quit()
+            await driver.quit();
         });
     });
 
@@ -257,6 +211,65 @@ describe("S2 - Users", () => {
 
         afterEach(async () => {
             await driver.quit();
+        });
+    });
+
+    describe("Delete", () => {
+
+        let driver;
+        let url = "http://localhost:3000";
+
+        beforeEach(() => {
+            driver = new Builder().forBrowser("chrome").build();
+            driver.get(url);
+        });
+
+        it("S2.1.3- Successfully deleted a user as an admin", async() => {
+
+            await login(driver, "admin");
+
+            await driver.findElement(By.linkText("Users")).click();
+        
+            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
+            
+            await driver.sleep(3000);
+
+            buttonDelete[0].click();
+
+            await driver.sleep(3000);
+
+            let confirmDelete = await driver.findElement(By.className("deleteUserButton"));
+
+            confirmDelete.click();
+
+            await driver.sleep(4000);
+        });
+
+
+        it("S2.1.4- Refused to delete a user as an admin", async() => {
+
+            await login(driver, "admin");
+
+            await driver.findElement(By.linkText("Users")).click();
+        
+            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
+            
+            await driver.sleep(3000);
+
+            buttonDelete[0].click();
+
+            await driver.sleep(3000);
+
+            let confirmRefuse = await driver.findElement(By.className("cancelDeleteUserButton"));
+
+            confirmRefuse.click();
+
+            await driver.sleep(4000);
+        });
+
+
+        afterEach(async () => {
+            await driver.quit()
         });
     });
 });
