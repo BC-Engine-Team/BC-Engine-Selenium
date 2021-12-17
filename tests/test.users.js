@@ -84,6 +84,7 @@ describe("S2 - Users", () => {
             let submitButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/form/div[5]/button[1]"));
             await driver.wait(until.elementIsEnabled(submitButton), 2000);
             submitButton.click();
+            submitButton.click();
 
             let goBackButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/form/div[5]/button[2]"));
             assert.equal(await goBackButton.getAttribute("class"), "btn btn-light py-2 px-5 my-1 shadow-sm border btn btn-primary");
@@ -132,7 +133,7 @@ describe("S2 - Users", () => {
             let p2Entry = await driver.findElement(By.id("floatingPassword2"));
             let roleEntry = await driver.findElement(By.id("floatingModifyRole")).sendKeys(role);
             p1Entry.sendKeys(password, Key.RETURN);
-            p2Entry.sendKeys(password+"1", Key.RETURN);
+            p2Entry.sendKeys(password+"a", Key.RETURN);
             
             submitButton.click();
             submitButton.click();
@@ -142,18 +143,9 @@ describe("S2 - Users", () => {
             assert.equal(await errors[1].getText(), passMatchError);
             assert.equal(await errors[2].getText(), passMatchError);
 
-            await p1Entry.clear();
-            await p2Entry.clear();
-            await driver.sleep(3000);
-
-            p1Entry.sendKeys(password);
-            await driver.sleep(3000);
-            p2Entry.sendKeys(password);
-            await driver.sleep(3000);
+            p1Entry.sendKeys("a", Key.RETURN);
 
             submitButton.click();
-
-            await driver.sleep(3000);
 
             errors = await driver.findElements(By.className("invalid-feedback"));
             assert.equal(await errors[0].getText(), invalidEmailError);
@@ -177,11 +169,13 @@ describe("S2 - Users", () => {
             let role = "admin";
 
             let existsError = "User already exists.";
+            let notExistError = "Employee email doesn't exist.";
 
-            let emailEntry = await driver.findElement(By.id("floatingEmail")).sendKeys(email, Key.RETURN);
+            let emailEntry = await driver.findElement(By.id("floatingEmail"));
             let p1Entry = await driver.findElement(By.id("floatingPassword1"));
             let p2Entry = await driver.findElement(By.id("floatingPassword2"));
             let roleEntry = await driver.findElement(By.id("floatingModifyRole")).sendKeys(role);
+            emailEntry.sendKeys(email, Key.RETURN);
             p1Entry.sendKeys(password, Key.RETURN);
             p2Entry.sendKeys(password, Key.RETURN);
             
@@ -197,9 +191,23 @@ describe("S2 - Users", () => {
             await driver.sleep(3000);
             assert.equal(await goBackButton.getAttribute("class"), "d-none btn btn-primary");
 
-            let errorAlert = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/form/div[1]"));
-            assert.equal(await errorAlert.getText(), existsError);
+            let errorAlert = await driver.findElement(By.css("div[role=alert]")).getText();
+            assert.equal(errorAlert, existsError);
 
+            submitButton.click();
+
+            email = "cool@benoit-cote.com";
+
+            emailEntry.sendKeys(email, Key.RETURN);
+            await driver.sleep(2000);
+            submitButton.click();
+            await driver.sleep(2000);
+            submitButton.click();
+            await driver.sleep(2000);
+
+            errorAlert = await driver.findElement(By.css("div[role=alert]")).getText();
+
+            assert.equal(errorAlert, notExistError);
 
         });
 
