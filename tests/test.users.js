@@ -79,12 +79,12 @@ describe("S2 - Users", () => {
             await driver.findElement(By.id("floatingModifyRole")).sendKeys(role);
 
             
-            let submitButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/form/div[5]/button[1]"));
+            let submitButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/div/form/div[5]/button[1]"));
             await driver.wait(until.elementIsEnabled(submitButton), 2000);
             submitButton.click();
             submitButton.click();
 
-            let goBackButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/form/div[5]/button[2]"));
+            let goBackButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/div/form/div[5]/button[2]"));
             assert.equal(await goBackButton.getAttribute("class"), "btn btn-light py-2 px-5 my-1 shadow-sm border btn btn-primary");
 
             submitButton.click();
@@ -93,7 +93,7 @@ describe("S2 - Users", () => {
             assert.equal(await form.getAttribute("class"), "d-none");
 
             let users = await driver.findElements(By.css("tr"));
-            assert.equal(users.length-1, 3);
+            assert.equal(users.length, 3);
         });
 
         it("S2.2.2 - Shows form input validation errors", async () => {
@@ -115,7 +115,7 @@ describe("S2 - Users", () => {
             let passMatchError = "Passwords must match!";
             let passStrengthError = "Password must be at least 8 characters, contain 1 upper-case and 1 lower-case letter, and contain a number.";
 
-            let submitButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/form/div[5]/button[1]"));
+            let submitButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/div/form/div[5]/button[1]"));
             await driver.wait(until.elementIsEnabled(submitButton), 2000);
             submitButton.click();
             submitButton.click();
@@ -176,12 +176,14 @@ describe("S2 - Users", () => {
             emailEntry.sendKeys(email, Key.RETURN);
             p1Entry.sendKeys(password, Key.RETURN);
             p2Entry.sendKeys(password, Key.RETURN);
+
+            await driver.sleep(2000)
             
-            let submitButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/form/div[5]/button[1]"));
+            let submitButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/div/form/div[5]/button[1]"));
             await driver.wait(until.elementIsEnabled(submitButton), 2000);
             submitButton.click();
 
-            let goBackButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/form/div[5]/button[2]"));
+            let goBackButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/div/form/div[5]/button[2]"));
             assert.equal(await goBackButton.getAttribute("class"), "btn btn-light py-2 px-5 my-1 shadow-sm border btn btn-primary");
 
             submitButton.click();
@@ -189,8 +191,9 @@ describe("S2 - Users", () => {
             await driver.sleep(3000);
             assert.equal(await goBackButton.getAttribute("class"), "d-none btn btn-primary");
 
-            let errorAlert = await driver.findElement(By.css("div[role=alert]")).getText();
+            let errorAlert = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/div/form/div[1]")).getText();
             assert.equal(errorAlert, existsError);
+            console.log("made it")
 
             submitButton.click();
 
@@ -200,12 +203,10 @@ describe("S2 - Users", () => {
             await driver.sleep(2000);
             submitButton.click();
             await driver.sleep(2000);
-            submitButton.click();
-            await driver.sleep(2000);
 
-            errorAlert = await driver.findElement(By.css("div[role=alert]")).getText();
+            let errorAlert2 = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/div/form/div[1]")).getText();
 
-            assert.equal(errorAlert, notExistError);
+            assert.equal(errorAlert2, notExistError);
 
         });
 
@@ -232,17 +233,17 @@ describe("S2 - Users", () => {
         
             let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
             
-            await driver.sleep(3000);
+            await driver.sleep(1000);
 
             buttonDelete[0].click();
 
-            await driver.sleep(3000);
+            await driver.sleep(1000);
 
             let confirmDelete = await driver.findElement(By.className("deleteUserButton"));
 
             confirmDelete.click();
 
-            await driver.sleep(4000);
+            await driver.sleep(1000);
         });
 
 
@@ -254,17 +255,17 @@ describe("S2 - Users", () => {
         
             let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
             
-            await driver.sleep(3000);
+            await driver.sleep(1000);
 
             buttonDelete[0].click();
 
-            await driver.sleep(3000);
+            await driver.sleep(1000);
 
             let confirmRefuse = await driver.findElement(By.className("cancelDeleteUserButton"));
 
             confirmRefuse.click();
 
-            await driver.sleep(4000);
+            await driver.sleep(1000);
         });
 
 
