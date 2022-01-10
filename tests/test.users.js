@@ -215,62 +215,58 @@ describe("S2 - Users", () => {
         });
     });
 
-    describe("S2.3 - Admin wants to delete a user", () => {
 
+    describe("S2.4 - Admin wants to delete a user", () => {
         let driver;
         let url = "http://localhost:3000";
+
 
         beforeEach(() => {
             driver = new Builder().forBrowser("chrome").build();
             driver.get(url);
         });
 
-        it("S2.3.1 - Successfully deleted a user as an admin", async() => {
+
+        it("S2.4.1- Successfully deleted a user as an admin", async() => {
 
             await login(driver, "admin");
-
             await driver.findElement(By.linkText("Users")).click();
-        
-            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
             
-            await driver.sleep(1000);
+            let users = await driver.findElements(By.css("tr"));
+            assert.equal(users.length-1, 3);
 
+            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
             buttonDelete[0].click();
-
-            await driver.sleep(1000);
-
+            await driver.sleep(4000);
             let confirmDelete = await driver.findElement(By.className("deleteUserButton"));
-
             confirmDelete.click();
+            await driver.sleep(4000);
 
-            await driver.sleep(1000);
+            users = await driver.findElements(By.css("tr"));
+            assert.equal(users.length-1, 2);
         });
-
-
-        it("S2.3.2- Refused to delete a user as an admin", async() => {
-
+    
+    
+        it("S2.4.2- Refused to delete a user as an admin", async() => {
+    
             await login(driver, "admin");
-
             await driver.findElement(By.linkText("Users")).click();
-        
-            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
             
-            await driver.sleep(1000);
+            let users = await driver.findElements(By.css("tr"));
+            assert.equal(users.length-1, 2);
 
+            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
             buttonDelete[0].click();
-
-            await driver.sleep(1000);
-
+            await driver.sleep(4000);
             let confirmRefuse = await driver.findElement(By.className("cancelDeleteUserButton"));
-
             confirmRefuse.click();
+            await driver.sleep(4000);
 
-            await driver.sleep(1000);
+            assert.equal(users.length-1, 2);
         });
-
 
         afterEach(async () => {
-            await driver.quit()
+            await driver.quit();
         });
     });
 });
