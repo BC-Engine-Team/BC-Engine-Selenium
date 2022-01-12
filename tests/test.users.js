@@ -7,7 +7,7 @@ const { login } = require('./components/login');
 
 describe("S2 - Users", () => {
 
-    // Tests the different roles available
+    //Tests the different roles available
     describe("S2.1 - User wants to see all users", () => {
         let driver;
         let url = "http://localhost:3000";
@@ -93,7 +93,7 @@ describe("S2 - Users", () => {
             assert.equal(await form.getAttribute("class"), "d-none");
 
             let users = await driver.findElements(By.css("tr"));
-            assert.equal(users.length, 3);
+            assert.equal(users.length-1, 3);
         });
 
         it("S2.2.2 - Shows form input validation errors", async () => {
@@ -215,8 +215,7 @@ describe("S2 - Users", () => {
         });
     });
 
-    describe("S2.3 - Admin wants to delete a user", () => {
-
+    describe("S2.3 - Admin wants to update an user", () => {
         let driver;
         let url = "http://localhost:3000";
 
@@ -225,52 +224,204 @@ describe("S2 - Users", () => {
             driver.get(url);
         });
 
-        it("S2.3.1 - Successfully deleted a user as an admin", async() => {
 
-            await login(driver, "admin");
+        it("S2.3.1 - Successfully updated an user", async () => {
+            await login(driver);
 
             await driver.findElement(By.linkText("Users")).click();
-        
-            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
+
+            let currentRole = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[1]/div/div/table/tbody/tr[1]/td[4]")).getText();
+            assert.equal(currentRole, "employee");
+
             
-            await driver.sleep(1000);
+            let buttonEdit = await driver.findElements(By.className("btnEdit btn-edit"));
+            buttonEdit[1].click();
+            await driver.sleep(2000);
 
-            buttonDelete[0].click();
+            let form = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]"));
+            assert.equal(await form.getAttribute("class"), "container-form-enabled-form");
 
-            await driver.sleep(1000);
+            let password = "CoolCool123";
 
-            let confirmDelete = await driver.findElement(By.className("deleteUserButton"));
+            await driver.findElement(By.id("floatingPassword1")).sendKeys(password);
+            await driver.findElement(By.id("floatingPassword2")).sendKeys(password);
+            
 
-            confirmDelete.click();
+            let roleSelected = await driver.findElement(By.id("floatingModifyRole"));
+            roleSelected.click();
+            roleSelected.findElement(By.css("option[value='admin']")).click();
+            await driver.sleep(2000);
+            
+            let submitButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/div/form/div[5]/button[1]"));
+            await driver.wait(until.elementIsEnabled(submitButton), 2000);
+            await submitButton.click();
+            await submitButton.click();
+            await driver.sleep(2000);
 
-            await driver.sleep(1000);
+
+            currentRole = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[1]/div/div/table/tbody/tr[2]/td[4]")).getText();
+            assert.equal(currentRole, "admin");
         });
 
 
-        it("S2.3.2- Refused to delete a user as an admin", async() => {
+        it("S2.3.2 - Shows form input validation errors on update", async () => {
+            await login(driver);
+    
+            await driver.findElement(By.linkText("Users")).click();
+    
+            await driver.findElement(By.xpath("/html/body/div/div/div/div/div[1]/div/div/table/thead/tr/th[5]/div/button")).click();
+    
+            let buttonEdit = await driver.findElements(By.className("btnEdit btn-edit"));
+            buttonEdit[1].click();
+            await driver.sleep(2000);
 
-            await login(driver, "admin");
+            let fakePassword = "CoolCool";
+            let realPassword = "CoolCoola"
+
+            let emptyError = "This field cannot be empty!";
+            let passMatchError = "Passwords must match!";
+            let passStrengthError = "Password must be at least 8 characters, contain 1 upper-case and 1 lower-case letter, and contain a number.";
+    
+            let submitButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/div/form/div[5]/button[1]"));
+            await driver.wait(until.elementIsEnabled(submitButton), 2000);
+            submitButton.click();
+    
+            let errors = await driver.findElements(By.className("invalid-feedback"));
+            assert.equal(errors.length-1, 3);
+            assert.equal(await errors[1].getText(), emptyError);
+            assert.equal(await errors[2].getText(), emptyError);
+            await driver.sleep(2000);
+            
+            await driver.findElement(By.id("floatingPassword1")).sendKeys(fakePassword);
+            await driver.findElement(By.id("floatingPassword2")).sendKeys(realPassword);
+
+            submitButton.click();
+    
+            errors = await driver.findElements(By.className("invalid-feedback"));
+            assert.equal(await errors[1].getText(), passMatchError);
+            assert.equal(await errors[2].getText(), passMatchError);
+            await driver.sleep(2000);
+
+            await driver.findElement(By.id("floatingPassword1")).sendKeys("a");
+            submitButton.click();
+    
+            errors = await driver.findElements(By.className("invalid-feedback"));
+            assert.equal(await errors[1].getText(), passStrengthError);
+            assert.equal(await errors[2].getText(), "");
+            await driver.sleep(2000);
+        });
+
+
+        it("S2.3.3 - Successfully go back changing info if necessary and closing the edit panel", async () => {
+            await login(driver);
 
             await driver.findElement(By.linkText("Users")).click();
-        
-            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
+
+            let currentRole = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[1]/div/div/table/tbody/tr[1]/td[4]")).getText();
+            assert.equal(currentRole, "employee");
+
             
-            await driver.sleep(1000);
+            let buttonEdit = await driver.findElements(By.className("btnEdit btn-edit"));
+            buttonEdit[0].click();
+            await driver.sleep(3000);
 
-            buttonDelete[0].click();
+            let form = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]"));
+            assert.equal(await form.getAttribute("class"), "container-form-enabled-form");
 
-            await driver.sleep(1000);
+            let password = "CoolCool123";
 
-            let confirmRefuse = await driver.findElement(By.className("cancelDeleteUserButton"));
+            await driver.findElement(By.id("floatingPassword1")).sendKeys(password);
+            await driver.findElement(By.id("floatingPassword2")).sendKeys(password);
+            
 
-            confirmRefuse.click();
+            var currentPasswordEntry = await driver.findElement(By.id("floatingPassword1")).getAttribute("value");
+            assert.equal(currentPasswordEntry, "CoolCool123");
 
-            await driver.sleep(1000);
+            let submitButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/div/form/div[5]/button[1]"));
+            await driver.wait(until.elementIsEnabled(submitButton), 2000);
+            await submitButton.click();
+            await driver.sleep(3000);
+
+            let goBackButton = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[2]/div/div/form/div[5]/button[2]"));
+            await driver.wait(until.elementIsEnabled(goBackButton), 2000);
+            await goBackButton.click();
+            await driver.sleep(3000);
+
+            currentPasswordEntry = await driver.findElement(By.id("floatingPassword1")).getAttribute("value");
+            assert.equal(currentPasswordEntry, "CoolCool123");
+
+            await driver.findElement(By.className("btn-close position-absolute top-0 end-0 m-4")).click();
+
+            currentRole = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[1]/div/div/table/tbody/tr[1]/td[4]")).getText();
+            assert.equal(currentRole, "employee");
+            await driver.sleep(3000);
         });
 
 
         afterEach(async () => {
-            await driver.quit()
+            await driver.quit();
+        });
+
+    });
+
+
+    describe("S2.4 - Admin wants to delete a user", () => {
+        let driver;
+        let url = "http://localhost:3000";
+
+
+        beforeEach(() => {
+            driver = new Builder().forBrowser("chrome").build();
+            driver.get(url);
+        });
+
+
+        it("S2.4.1- Successfully deleted a user as an admin", async() => {
+
+            await login(driver, "admin");
+            await driver.findElement(By.linkText("Users")).click();
+            
+            await driver.sleep(2000);
+
+            let users = await driver.findElements(By.css("tr"));
+            assert.equal(users.length-1, 3);
+
+            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
+            buttonDelete[0].click();
+            await driver.sleep(2000);
+            let confirmDelete = await driver.findElement(By.className("deleteUserButton"));
+            confirmDelete.click();
+            await driver.sleep(2000);
+
+            users = await driver.findElements(By.css("tr"));
+            assert.equal(users.length-1, 2);
+        });
+    
+    
+        it("S2.4.2- Refused to delete a user as an admin", async() => {
+    
+            await login(driver, "admin");
+            await driver.findElement(By.linkText("Users")).click();
+            
+            await driver.sleep(2000);
+
+            let users = await driver.findElements(By.css("tr"));
+            assert.equal(users.length-1, 2);
+
+            let buttonDelete = await driver.findElements(By.className("btnDelete btn-delete"));
+            buttonDelete[0].click();
+            await driver.sleep(2000);
+            let confirmRefuse = await driver.findElement(By.className("cancelDeleteUserButton"));
+            confirmRefuse.click();
+            await driver.sleep(2000);
+
+
+            users = await driver.findElements(By.css("tr"));
+            assert.equal(users.length-1, 2);
+        });
+
+        afterEach(async () => {
+            await driver.quit();
         });
     });
 });
