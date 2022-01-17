@@ -17,7 +17,13 @@ describe("S3 - Dashboard", () => {
         it("S3.1.1 - Successfully shows data on Chart", async () => {
             await login(driver);
 
+            let chartNameInput = await driver.findElement(By.id("chartName")).getText()
+            console.log(chartNameInput);
 
+        });
+
+        afterEach(async () => {
+            await driver.quit();
         });
     });
 });

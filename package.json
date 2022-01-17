@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha --no-timeouts 'tests/*.js'",
     "test-login": "mocha --no-timeouts 'tests/test.login-logout.js'",
-    "test-users": "mocha --no-timeouts 'tests/test.users.js'"
+    "test-users": "mocha --no-timeouts 'tests/test.users.js'",
+    "test-dash": "mocha --no-timeouts 'tests/test.dashboard.js'"
   },
   "keywords": [],
   "author": "",
