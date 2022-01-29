@@ -69,19 +69,40 @@ describe("S3 - Dashboard", () => {
             await driver.get(url);
             await login(driver);
 
-            // verify that the chart display
-            let chartCanvas = await driver.findElement(By.id("chart"));
+            // verify that the table display
+            let clientTable = await driver.findElement(By.id("table"));
 
             await driver.sleep(3000);
 
-            await eyes.check("Chart Canvas", chartCanvas);
-            await eyes.closeAsync();
+            assert(clientTable.isDisplayed());
 
-            // verify that the input box for chart report name works
-            let chartNameInput = await driver.findElement(By.id("chartName"));
-            await driver.wait(until.elementIsEnabled(chartNameInput), 2000);
-            await chartNameInput.sendKeys("Chart Name", Key.TAB);
-            assert.equal(await chartNameInput.getAttribute("value"), "Chart Name");
+
+            let name = "Bluberi Recherche et Développement inc."
+            let country = "Canada"
+            let average = "23"
+            let amountOwed = "55645"
+            let amountDue = "66643"
+            let grading = "N/A"
+            let status = "Active"
+
+
+            //display the correct data on each columns
+            let clientName = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[0]")).getText(); 
+            let clientCountry = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[1]")).getText(); 
+            let clientAverage = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[2]")).getText(); 
+            let clientAmountOwed = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[3]")).getText(); 
+            let clientAmountDue = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[4]")).getText(); 
+            let clientGrading = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[5]")).getText();
+            let clientStatus = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[6]")).getText(); 
+
+
+            assert.equal(clientName, name);
+            assert.equal(clientCountry, country);
+            assert.equal(clientAverage, average);
+            assert.equal(amountOwed, clientAmountOwed);
+            assert.equal(amountDue, clientAmountDue);
+            assert.equal(grading, clientGrading);
+            assert.equal(status, clientStatus);
         });
 
         afterEach(async () => {
