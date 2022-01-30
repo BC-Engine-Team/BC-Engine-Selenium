@@ -7,7 +7,8 @@
     "test": "mocha --no-timeouts 'tests/*.js'",
     "test-login": "mocha --no-timeouts 'tests/test.login-logout.js'",
     "test-users": "mocha --no-timeouts 'tests/test.users.js'",
-    "test-dash": "mocha --no-timeouts 'tests/test.dashboard.js'"
+    "test-dash": "mocha --no-timeouts 'tests/test.dashboard.js'",
+    "test-reports": "mocha --no-timeouts 'tests/test.reports.js'"
   },
   "keywords": [],
   "author": "",
