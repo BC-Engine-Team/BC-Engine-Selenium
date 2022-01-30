@@ -86,14 +86,16 @@ describe("S3 - Dashboard", () => {
             let status = "Active"
 
 
+            await driver.sleep(4000);
+
             //display the correct data on each columns
-            let clientName = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[0]")).getText(); 
-            let clientCountry = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[1]")).getText(); 
-            let clientAverage = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[2]")).getText(); 
-            let clientAmountOwed = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[3]")).getText(); 
-            let clientAmountDue = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[4]")).getText(); 
-            let clientGrading = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[5]")).getText();
-            let clientStatus = await driver.findElement(By.xpath("/table/tbody/tr[0]/td[6]")).getText(); 
+            let clientName = await driver.findElement(By.xpath('//*[@id="clientName"]')).getText(); 
+            let clientCountry = await driver.findElement(By.xpath('//*[@id="clientCountry"]')).getText(); 
+            let clientAverage = await driver.findElement(By.xpath('//*[@id="clientAverageCollectionDays"]')).getText(); 
+            let clientAmountOwed = await driver.findElement(By.xpath('//*[@id="clientAmountOwed"]')).getText(); 
+            let clientAmountDue = await driver.findElement(By.xpath('//*[@id="clientAmountDue"]')).getText(); 
+            let clientGrading = await driver.findElement(By.xpath('//*[@id="clientGrading"]')).getText();
+            let clientStatus = await driver.findElement(By.xpath('//*[@id="clientStatus"]')).getText(); 
 
 
             assert.equal(clientName, name);
