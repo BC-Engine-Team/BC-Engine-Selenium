@@ -19,11 +19,12 @@ describe("S4 - Reports", () => {
         it("S4.1.1 - Successfully show all the admin's chart reports", async () => {
             await login(driver);
 
+            let date = new Date().toISOString().split("T")[0];
             let expectedNumberOfChartReports = 2;
             let expectedNumberOfValues = 16;
             let expectedChartReports = [
-                "CR1", "France Cote", "Corr", "Canada", "All", "Receivable", "2022-01-30", "2022-01-30", "",
-                "CR2", "All, France Cote", "Direct", "All", "60-90", "Receivable", "2022-01-30", "2022-01-30"
+                "CR1", "France Cote", "Corr", "Canada", "All", "Receivable", date, date, "",
+                "CR2", "All, France Cote", "Direct", "All", "60-90", "Receivable", "2022-01-31", "2022-01-31"
             ];
 
             await driver.findElement(By.linkText("Reports")).click();
@@ -49,10 +50,11 @@ describe("S4 - Reports", () => {
         it("S4.1.2 - Successfully show all the employee's chart reports", async () => {
             await login(driver, "employee");
 
+            let date = new Date().toISOString().split("T")[0];
             let expectedNumberOfChartReports = 1;
             let expectedNumberOfValues = 8;
             let expectedChartReports = [
-                "CR3", "France Cote", "Any", "All", "<30", "Payable", "2022-01-30", "2022-01-30"
+                "CR3", "France Cote", "Any", "All", "<30", "Payable", date, date
             ];
 
             await driver.findElement(By.linkText("Reports")).click();
