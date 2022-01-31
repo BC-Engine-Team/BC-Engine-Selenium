@@ -19,7 +19,7 @@ const login = async (driver, role = "admin") => {
     await driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
 
     await driver.findElement(By.id("loginButton")).click();
-    let navElements = await driver.wait(until.elementsLocated(By.className("px-2 nav-link")), 10000);
+    let navElements = await driver.wait(until.elementsLocated(By.className("px-2 nav-link")), 3000);
 
     if (role === "admin") {
         assert.equal(navElements.length, 4)

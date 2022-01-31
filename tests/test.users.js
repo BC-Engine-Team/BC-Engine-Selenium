@@ -334,8 +334,7 @@ describe("S2 - Users", () => {
 
             await driver.sleep(1000);
 
-            let currentRole = await driver.findElement(By.xpath("/html/body/div[1]/div/div/div/div[1]/div/div/table/tbody/tr[3]/td[4]"));
-            //assert.equal(await currentRole.getText(), "employee");
+            let currentRole = await driver.findElement(By.xpath("/html/body/div/div/div/div/div[1]/div/div/table/tbody/tr[3]/td[4]"));
             let expectedRole = await currentRole.getText();
 
             let buttonEdit = await driver.findElements(By.className("btnEdit btn-edit"));
