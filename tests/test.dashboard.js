@@ -3,7 +3,7 @@ require("chromedriver");
 const assert = require("assert");
 const { describe, beforeEach, afterEach, it } = require("mocha");
 const { login } = require('./components/login');
-const { Eyes, Target, ClassicRunner } = require('@applitools/eyes-selenium');
+const { Eyes, ClassicRunner } = require('@applitools/eyes-selenium');
 
 describe("S3 - Dashboard", () => {
     describe("S3.1 - User logs in and sees Dashboard Chart", () => {
@@ -23,7 +23,7 @@ describe("S3 - Dashboard", () => {
 
         it("S3.1.1 - Successfully shows data on Chart", async () => {
             await eyes.open(driver, "B&C Engine", "check default overview chart");
-            await driver.get(url);
+            driver.get(url);
             await login(driver);
 
             // verify that the chart display
