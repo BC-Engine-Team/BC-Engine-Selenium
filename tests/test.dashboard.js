@@ -50,23 +50,15 @@ describe("S3 - Dashboard", () => {
     
 
     describe("S3.2 - User logs in and sees Dashboard Table", () => {
-        let driver, runner, eyes;
+        let driver;
         let url = "http://localhost:3000";
 
         beforeEach(() => {
-            // Initialize the Runner for your test.
-            runner = new ClassicRunner();
-
-            // Initialize the eyes SDK 
-            eyes = new Eyes(runner);
-            eyes.setApiKey("lJfCRLJ1k3w108xjmryokB102yHOMxfxZ197RsnV9x2bYyiA110");
-
             driver = new Builder().forBrowser("chrome").build();
+            driver.get(url);
         });
 
         it("S3.2.1 - Successfully shows data on Table", async () => {
-            await eyes.open(driver, "B&C Engine", "check default overview table");
-            await driver.get(url);
             await login(driver);
 
             // verify that the table display
@@ -109,7 +101,6 @@ describe("S3 - Dashboard", () => {
 
         afterEach(async () => {
             await driver.quit();
-            await eyes.abortIfNotClosed();
         });
     });
 });
