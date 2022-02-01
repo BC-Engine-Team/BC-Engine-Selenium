@@ -22,7 +22,7 @@ describe("S3 - Dashboard", () => {
         });
 
         it("S3.1.1 - Successfully shows default data on Chart", async () => {
-            await eyes.open(driver, "B&C Engine", "Check Dynamic Default Overview Chart (2022-01-31)");
+            await eyes.open(driver, "B&C Engine", "Check Dynamic Default Overview Chart Official");
             driver.get(url);
             await login(driver);
 
@@ -42,7 +42,7 @@ describe("S3 - Dashboard", () => {
         });
 
         it("S3.1.2 - Successfully show data based on valid time frame selection", async () => {
-            await eyes.open(driver, "B&C Engine", "Check Overview Chart 2016-01 -> 2017-07");
+            await eyes.open(driver, "B&C Engine", "Check Overview Chart 2016-01 -> 2017-08");
             driver.get(url);
             await driver.sleep(1000);
             await login(driver);
@@ -51,7 +51,7 @@ describe("S3 - Dashboard", () => {
             let newStartYear = 2016;
             let newStartMonth = "January";
             let newEndYear = 2017;
-            let newEndMonth = "July";
+            let newEndMonth = "August";
 
             let chartCanvas = await driver.findElement(By.id("chart"));
 
