@@ -46,4 +46,61 @@ describe("S3 - Dashboard", () => {
             await eyes.abortIfNotClosed();
         });
     });
+
+    
+
+    describe("S3.2 - User logs in and sees Dashboard Table", () => {
+        let driver;
+        let url = "http://localhost:3000";
+
+        beforeEach(() => {
+            driver = new Builder().forBrowser("chrome").build();
+            driver.get(url);
+        });
+
+        it("S3.2.1 - Successfully shows data on Table", async () => {
+            await login(driver);
+
+            // verify that the table display
+            let clientTable = await driver.findElement(By.id("table"));
+
+            await driver.sleep(3000);
+
+            assert(clientTable.isDisplayed());
+
+
+            let name = "Bluberi Recherche et Développement inc."
+            let country = "Canada"
+            let average = "23"
+            let amountOwed = "55645"
+            let amountDue = "66643"
+            let grading = "N/A"
+            let status = "Active"
+
+
+            await driver.sleep(4000);
+
+            //display the correct data on each columns
+            let clientName = await driver.findElement(By.xpath('//*[@id="clientName"]')).getText(); 
+            let clientCountry = await driver.findElement(By.xpath('//*[@id="clientCountry"]')).getText(); 
+            let clientAverage = await driver.findElement(By.xpath('//*[@id="clientAverageCollectionDays"]')).getText(); 
+            let clientAmountOwed = await driver.findElement(By.xpath('//*[@id="clientAmountOwed"]')).getText(); 
+            let clientAmountDue = await driver.findElement(By.xpath('//*[@id="clientAmountDue"]')).getText(); 
+            let clientGrading = await driver.findElement(By.xpath('//*[@id="clientGrading"]')).getText();
+            let clientStatus = await driver.findElement(By.xpath('//*[@id="clientStatus"]')).getText(); 
+
+
+            assert.equal(clientName, name);
+            assert.equal(clientCountry, country);
+            assert.equal(clientAverage, average);
+            assert.equal(amountOwed, clientAmountOwed);
+            assert.equal(amountDue, clientAmountDue);
+            assert.equal(grading, clientGrading);
+            assert.equal(status, clientStatus);
+        });
+
+        afterEach(async () => {
+            await driver.quit();
+        });
+    });
 });
