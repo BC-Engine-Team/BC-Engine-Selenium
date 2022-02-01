@@ -12,9 +12,10 @@ describe("S2 - Users", () => {
         let driver;
         let url = "http://localhost:3000";
 
-        beforeEach(() => {
+        beforeEach(async () => {
             driver = new Builder().forBrowser("chrome").build();
             driver.get(url);
+            await driver.sleep(1000);
         });
 
         it("S2.1.1 - Successfully showed all users as admin user", async () => {
@@ -54,9 +55,10 @@ describe("S2 - Users", () => {
         let driver;
         let url = "http://localhost:3000";
 
-        beforeEach(() => {
+        beforeEach(async () => {
             driver = new Builder().forBrowser("chrome").build();
             driver.get(url);
+            await driver.sleep(1000);
         });
 
         it("S2.2.1 - Successfully create a new user", async () => {
@@ -220,9 +222,10 @@ describe("S2 - Users", () => {
         let driver;
         let url = "http://localhost:3000";
 
-        beforeEach(() => {
+        beforeEach(async () => {
             driver = new Builder().forBrowser("chrome").build();
             driver.get(url);
+            await driver.sleep(1000);
         });
 
         it("S2.3.1 - Successfully updated an user", async () => {
@@ -272,7 +275,6 @@ describe("S2 - Users", () => {
         });
 
         it("S2.3.2 - Shows form input validation errors on update", async () => {
-            //////
             await login(driver);
 
             await driver.findElement(By.linkText("Users")).click();
@@ -381,9 +383,10 @@ describe("S2 - Users", () => {
         let driver;
         let url = "http://localhost:3000";
 
-        beforeEach(() => {
+        beforeEach(async () => {
             driver = new Builder().forBrowser("chrome").build();
             driver.get(url);
+            await driver.sleep(1000);
         });
 
         it("S2.4.1- Successfully deleted a user as an admin", async () => {
