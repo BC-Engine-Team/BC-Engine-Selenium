@@ -46,7 +46,7 @@ describe("S1 - Login, Logout and Roles", () => {
         it("S1.2.1 - Successfully loged out", async () => {
 
             await login(driver);
-        
+
             await logout(driver);
         });
 
@@ -60,16 +60,17 @@ describe("S1 - Login, Logout and Roles", () => {
         let driver;
         let url = "http://localhost:3000";
 
-        beforeEach(() => {
+        beforeEach(async () => {
             driver = new Builder().forBrowser("chrome").build();
             driver.get(url);
+            await driver.sleep(1000);
         });
 
         it("S1.3.1 - Should show alert when email is empty", async () => {
             let password = "verySecurePassword";
 
             await driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
-        
+
             await driver.findElement(By.className("btn")).click();
 
             let alert = await driver.findElements(By.className("invalid-feedback"));
@@ -81,7 +82,7 @@ describe("S1 - Login, Logout and Roles", () => {
             let username = "first@benoit-cote.com";
 
             await driver.findElement(By.id("floatingEmail")).sendKeys(username, Key.RETURN);
-        
+
             await driver.findElement(By.className("btn")).click();
 
             let alert = await driver.findElements(By.className("invalid-feedback"));
@@ -90,7 +91,7 @@ describe("S1 - Login, Logout and Roles", () => {
         });
 
         it("S1.3.3 - Should show both alerts when password and email are empty", async () => {
-        
+
             let alertCounter = 0;
 
             await driver.findElement(By.className("btn")).click();
@@ -98,7 +99,7 @@ describe("S1 - Login, Logout and Roles", () => {
             let alert = await driver.findElements(By.className("invalid-feedback"));
 
             alert.forEach(element => {
-                if(element.isDisplayed()) {
+                if (element.isDisplayed()) {
                     alertCounter += 1;
                 }
             });
@@ -108,11 +109,11 @@ describe("S1 - Login, Logout and Roles", () => {
 
         it("S1.3.4 - Should show alert saying 'incorrect email or password'", async () => {
             let username = "a@a.com";
-            let password = "testIncorrect"; 
+            let password = "testIncorrect";
 
             await driver.findElement(By.id("floatingEmail")).sendKeys(username, Key.RETURN);
             await driver.findElement(By.id("floatingPassword")).sendKeys(password, Key.RETURN);
-            
+
             await driver.findElement(By.className("btn")).click();
 
             let alert = await driver.findElement(By.css("div[role=alert]")).getText();
